@@ -1,10 +1,12 @@
 ﻿using Azure.Identity;
 using Azure.Storage.Blobs;
+using ChikoRokoBot.AntiBotNotify.Decorators;
 using ChikoRokoBot.AntiBotNotify.Interfaces;
 using ChikoRokoBot.AntiBotNotify.Managers;
 using ChikoRokoBot.AntiBotNotify.Options;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
@@ -41,7 +43,14 @@ namespace ChikoRokoBot.AntiBotNotify
                 return client;
             });
 
-            builder.Services.AddScoped<IAntiBotPictureManager, AntiBotPictureManager>();
+            builder.Services.AddScoped<AntiBotPictureManager>();
+            builder.Services.AddScoped<IAntiBotPictureManager>((factory) =>
+            {
+                var decoratee = factory.GetRequiredService<AntiBotPictureManager>();
+                var memoryCache = factory.GetRequiredService<IMemoryCache>();
+                return new AntiBotPictureManagerCacheDecorator(memoryCache, decoratee);
+            });
+            builder.Services.AddMemoryCache();
         }
     }
 }
