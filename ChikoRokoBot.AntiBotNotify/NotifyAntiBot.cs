@@ -24,7 +24,6 @@ namespace ChikoRokoBot.AntiBotNotify
         }
 
         [FunctionName("NotifyAntiBot")]
-        [FixedDelayRetry(5, "00:00:05")]
         public async Task Run([QueueTrigger("notifyantibot", Connection = "AzureWebJobsStorage")]Notification myQueueItem, ILogger log)
         {
             InlineKeyboardMarkup inlineKeyboard = new(new[]
