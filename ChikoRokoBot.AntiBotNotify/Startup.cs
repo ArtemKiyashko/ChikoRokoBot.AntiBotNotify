@@ -17,7 +17,7 @@ namespace ChikoRokoBot.AntiBotNotify
 	public class Startup : FunctionsStartup
     {
         private IConfigurationRoot _functionConfig;
-        private AntiBotNotifyOptions _antiBotMonitorOptions = new();
+        private readonly AntiBotNotifyOptions _antiBotMonitorOptions = new();
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
